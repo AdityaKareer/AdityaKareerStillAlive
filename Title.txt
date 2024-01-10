@@ -1,0 +1,67 @@
+Title: 
+Exp 1 :  Data preparation using NumPy and Pandas
+Problem Statement: 
+a. Derive an index field and add it to the data set. 
+b. Find out the missing values. 
+c. Obtain a listing of all records that are outliers according to the any field. Print out a listing of the 10 largest values for that field. 
+d.  Do the following for the any field. i. Standardize the variable. ii. Identify how many outliers there are and identify the most extreme outlier.
+
+Platform Used: 
+Kaggle / anaconda/ mention the one you are using.
+Name of Dataset:
+Superstore marketing campaign dataset (.csv file)
+Theory:
+Attach screenshot wherever necessary
+1. What is DS, numpy, pandas ,What is dataframe, what is EDA 
+2. how to read_csv file (answer this for the platform which you are using)
+3. How to create dataframe 
+4. how to select one/multiple column/s from dataset
+5. What is index, how to assign index
+6. Set_index () for single index , for multiple index
+7. Use of df.columns, head(),tail(), df.dtypes,value_counts(), isnull(),sum(), df.size, df.shape, len(df),Hasnans, dropna(),df.count, astype(int), describe(), max(),mean(), median(), std(), unique()
+8. What is quantile , percentile, meaning of df.count(axis=1).head()
+9. Syntax of replacing values in column?
+10. What is np.nan and NaN, iloc()
+11. Fillna(), bbfill, ffill 
+12. What is outlier ? 
+13. nlargest(), nsmallest(), How to find most frequent value in column 
+14. Ways to standardize -> zscore/ scipy.stats /standardscalar/ Minmaxscalar
+
+
+import pandas as pd
+
+# Step 1: Reading the CSV file
+df = pd.read_csv('superstore_dataset.csv')  # Replace 'superstore_dataset.csv' with your file name
+
+# Step 2: Adding an Index Field
+df['Index'] = range(1, len(df) + 1)
+df.set_index('Index', inplace=True)
+
+# Step 3: Finding Missing Values
+missing_values = df.isnull().sum()
+print(missing_values)
+
+# Step 4: Identifying Outliers in the 'Sales' column
+sales_column = df['Sales']
+Q1 = sales_column.quantile(0.25)
+Q3 = sales_column.quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+outliers = df[(sales_column < lower_bound) | (sales_column > upper_bound)]
+print(outliers)
+print(sales_column.nlargest(10))
+
+# Step 5: Standardizing a Variable (e.g., 'Profit')
+mean_profit = df['Profit'].mean()
+std_profit = df['Profit'].std()
+df['Standardized_Profit'] = (df['Profit'] - mean_profit) / std_profit
+
+# Step 6: Replacing Values in a Column
+df['Category'].replace('Old_Category', 'New_Category', inplace=True)
+
+# Step 7: Handling Missing Values by Filling with a specific value
+df['Column_Name'].fillna(value, inplace=True)
+
+# Step 8: Conclusion/Summary of Analysis
+print(df.describe())  # Summary statistics of the dataset
